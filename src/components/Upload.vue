@@ -99,18 +99,41 @@ export default {
               genre: '',
               comment_count: 0
             };
-            //
+
+            try {
+              // Retrieve the download URL asynchronously
+              song.url = await task.snapshot.ref.getDownloadURL();
+
+              // Add song data to Firebase database
+              const songRef = await songsCollection.add(song);
+
+              // Update the UI or perform additional actions
+              const songSnapshot = await songRef.get();
+              this.addSong(songSnapshot);
+
+              // Update progress bar for successful upload
+              this.uploads[uploadIndex].variant = 'bg-green-400';
+              this.uploads[uploadIndex].icon = 'fas fa-check';
+              this.uploads[uploadIndex].text_class = 'text-green-400';
+            } catch (error) {
+              // Handle any errors that occur during the process
+              this.uploads[uploadIndex].variant = 'bg-red-400';
+              this.uploads[uploadIndex].icon = 'fas fa-times';
+              this.uploads[uploadIndex].text_class = 'text-red-400';
+              console.error('Error retrieving download URL:', error);
+            }
+
             // song.url = await task.snapshot.ref.getDownloadURL();
-            const songRef = await songsCollection.add(song); // add song data to firebase database
+            // const songRef = await songsCollection.add(song); // add song data to firebase database
 
-            const songSnapshot = await songRef.get();
+            // const songSnapshot = await songRef.get();
 
-            this.addSong(songSnapshot);
+            // this.addSong(songSnapshot);
 
-            // upload success progress bar
-            this.uploads[uploadIndex].variant = 'bg-green-400';
-            this.uploads[uploadIndex].icon = 'fas fa-check';
-            this.uploads[uploadIndex].text_class = 'text-green-400';
+            // // upload success progress bar
+            // this.uploads[uploadIndex].variant = 'bg-green-400';
+            // this.uploads[uploadIndex].icon = 'fas fa-check';
+            // this.uploads[uploadIndex].text_class = 'text-green-400';
           }
         );
       });
