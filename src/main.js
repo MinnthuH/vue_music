@@ -8,6 +8,7 @@ import App from './App.vue';
 import router from './router';
 import VeeValidatePlugin from './includes/validation'; // validation plugin add
 import { auth } from './includes/firebase';
+import Icon from './directives/icon';
 
 let app;
 
@@ -19,6 +20,7 @@ auth.onAuthStateChanged(() => {
     app.use(router);
     app.use(VeeValidatePlugin); // validation plugin use
 
+    app.directive('icon', Icon); // directive use
     app.mount('#app');
   }
 });
